@@ -13,23 +13,36 @@ export const tcbRouter = createTRPCRouter({
     .input(
       z.object({
         limit: z.number().default(25),
-        page: z.number().default(1),
+        cursor: z.number().default(1),
+        nextCursor: z.number().optional(),
       }),
     )
     .query(async ({ input }) => {
+      const cursor = input.nextCursor ?? input.cursor;
       const res = await app.callFunction({
         name: "get-colors",
         data: {
           limit: input.limit,
-          page: input.page,
+          page: cursor,
         },
       });
 
-      return res.result as {
+      const result = res.result as {
         data: Color[];
         total: number;
         pages: number;
         hasNext: boolean;
+      };
+
+      let nextCursor: number | undefined = undefined;
+      if (result.hasNext) {
+        nextCursor = cursor + 1;
+      }
+
+      return {
+        data: result.data,
+        hasNextPage: result.hasNext,
+        nextCursor,
       };
     }),
 });
