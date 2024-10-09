@@ -10,6 +10,7 @@
     "start": "next start"
   },
   "dependencies": {
+    "@cloudbase/node-sdk": "^2.11.0",
     "@nextui-org/react": "^2.4.8",
     "@react-aria/ssr": "^3.9.6",
     "@react-aria/visually-hidden": "^3.8.16",
@@ -28,6 +29,7 @@
     "react-dom": "^18.3.1",
     "server-only": "^0.0.1",
     "superjson": "^2.2.1",
+    "usehooks-ts": "^3.1.0",
     "zod": "^3.23.3"
   },
   "devDependencies": {

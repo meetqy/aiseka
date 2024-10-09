@@ -1,5 +1,5 @@
 import { ColorCard } from "~/components/color-card";
-import { HydrateClient } from "~/trpc/server";
+import { api, HydrateClient } from "~/trpc/server";
 
 const colors = [
   "#206a44",
@@ -24,7 +24,9 @@ const colors = [
   "#050605",
 ];
 
-export default async function Home() {
+export default async function Page() {
+  const res = await api.tcb.getColors({ limit: 25, page: 1 });
+
   return (
     <HydrateClient>
       <div className="px-4">
@@ -39,8 +41,8 @@ export default async function Home() {
           </div>
         </header>
         <section className="grid h-full grid-cols-2 gap-8 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5">
-          {colors.map((color, index) => {
-            return <ColorCard key={index} hex={color} />;
+          {res.data.map((color) => {
+            return <ColorCard key={color._id} hex={color.hex} />;
           })}
         </section>
       </div>
