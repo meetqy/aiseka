@@ -15,7 +15,9 @@ export const ColorInfinite = () => {
     },
   );
 
-  const { isIntersecting, ref } = useIntersectionObserver();
+  const { isIntersecting, ref } = useIntersectionObserver({
+    threshold: 0,
+  });
 
   useEffect(() => {
     fetchNextPage();
@@ -30,7 +32,10 @@ export const ColorInfinite = () => {
           });
         })}
       </section>
-      <p ref={ref} className="text-center text-content4-foreground">
+      <p
+        ref={ref}
+        className="flex h-16 items-center justify-center text-center text-content4-foreground"
+      >
         load more ...
       </p>
     </>

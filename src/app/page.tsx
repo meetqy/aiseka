@@ -11,7 +11,7 @@ export default async function Page() {
         <header className="px-6 py-24 sm:py-32 lg:px-8">
           <div className="mx-auto max-w-5xl text-center">
             <h2 className="text-4xl font-bold tracking-tight text-foreground sm:text-6xl">
-              纯色列表
+              颜色精选
             </h2>
             <p className="mt-6 text-lg leading-8 text-content3-foreground">
               RGB、HEX、CMYK、HSL代码，组合和颜色渐变，点击颜色可以查看更多详细信息。
