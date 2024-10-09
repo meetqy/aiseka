@@ -24,7 +24,7 @@ export default function RootLayout({
         className={clsx("min-h-screen bg-background font-sans antialiased")}
       >
         <TRPCReactProvider>
-          <Providers themeProps={{ attribute: "class", defaultTheme: "light" }}>
+          <Providers>
             <div className="relative flex flex-col bg-content2">
               <Navbar />
               <main className="container py-8">{children}</main>
