@@ -4,10 +4,11 @@ import { api } from "~/trpc/react";
 import { ColorCard } from "./color-card";
 import { useIntersectionObserver } from "usehooks-ts";
 import { useEffect } from "react";
+import { type ColorType } from "~/server/api/routers/tcb";
 
-export const ColorInfinite = () => {
-  const { data, fetchNextPage } = api.tcb.getColors.useInfiniteQuery(
-    { limit: 25, nextCursor: 2 },
+export const ColorInfinite = (params: { type?: ColorType; limit?: number }) => {
+  const { data, fetchNextPage, refetch } = api.tcb.getColors.useInfiniteQuery(
+    { limit: params.limit, nextCursor: 2, type: params.type },
     {
       getNextPageParam: (lastPage) => {
         return lastPage.nextCursor;
@@ -22,6 +23,10 @@ export const ColorInfinite = () => {
   useEffect(() => {
     fetchNextPage();
   }, [fetchNextPage, isIntersecting]);
+
+  useEffect(() => {
+    refetch();
+  }, [params.type, refetch]);
 
   return (
     <>

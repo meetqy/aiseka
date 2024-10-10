@@ -8,25 +8,72 @@ const app = tcb.init({
   env: process.env.TCB_ENV_ID,
 });
 
+export const TYPE = [
+  "new",
+  "random",
+  "popular",
+  "red",
+  "green",
+  "blue",
+] as const;
+export type ColorType = (typeof TYPE)[number];
+
 export const tcbRouter = createTRPCRouter({
   getColors: publicProcedure
     .input(
       z.object({
-        limit: z.number().default(25),
+        limit: z.number().default(30),
+        type: z.enum(TYPE).default("new"),
         cursor: z.number().default(1),
         nextCursor: z.number().optional(),
       }),
     )
     .query(async ({ input }) => {
+      const { type } = input;
+
       const db = app.database();
-      const dbColors = db.collection("colors");
+      let query = db.collection("colors");
+
+      if (type === "random") {
+        if (input.limit % 2 !== 0) {
+          input.limit += 1;
+        }
+        const limit = input.limit;
+
+        const res = await Promise.all([
+          query
+            .aggregate()
+            .sample({ size: limit / 2 })
+            .end(),
+          query
+            .aggregate()
+            .sample({ size: limit / 2 })
+            .end(),
+        ]);
+
+        const [a, b] = res as { data: Color[] }[];
+
+        return {
+          data: a && b ? a.data.concat(b.data) : [],
+          total: 9999,
+          pageCount: 9999,
+          hasNextPage: true,
+          nextCursor: input.cursor + 1,
+        };
+      }
+
+      if (type === "new") {
+        query = query.where({}).orderBy("_id", "desc") as typeof query;
+      } else if (type === "popular") {
+        query = query.where({}).orderBy("views", "desc") as typeof query;
+      }
 
       const [colors, count] = await Promise.all([
-        dbColors
-          .limit(input.limit)
+        query
           .skip((input.cursor - 1) * input.limit)
+          .limit(input.limit)
           .get(),
-        dbColors.count(),
+        query.count(),
       ]);
 
       const total = count.total ?? 0;
