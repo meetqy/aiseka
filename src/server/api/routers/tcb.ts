@@ -8,8 +8,6 @@ const app = tcb.init({
   env: process.env.TCB_ENV_ID,
 });
 
-const db = app.database();
-
 export const tcbRouter = createTRPCRouter({
   getColors: publicProcedure
     .input(
@@ -20,6 +18,7 @@ export const tcbRouter = createTRPCRouter({
       }),
     )
     .query(async ({ input }) => {
+      const db = app.database();
       const dbColors = db.collection("colors");
 
       const [colors, count] = await Promise.all([
