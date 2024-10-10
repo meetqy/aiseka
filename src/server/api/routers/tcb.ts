@@ -8,6 +8,8 @@ const app = tcb.init({
   env: process.env.TCB_ENV_ID,
 });
 
+const db = app.database();
+
 export const tcbRouter = createTRPCRouter({
   getColors: publicProcedure
     .input(
@@ -18,31 +20,26 @@ export const tcbRouter = createTRPCRouter({
       }),
     )
     .query(async ({ input }) => {
-      const cursor = input.nextCursor ?? input.cursor;
-      const res = await app.callFunction({
-        name: "get-colors",
-        data: {
-          limit: input.limit,
-          page: cursor,
-        },
-      });
+      const dbColors = db.collection("colors");
 
-      const result = res.result as {
-        data: Color[];
-        total: number;
-        pages: number;
-        hasNext: boolean;
+      const [colors, count] = await Promise.all([
+        dbColors
+          .limit(input.limit)
+          .skip((input.cursor - 1) * input.limit)
+          .get(),
+        dbColors.count(),
+      ]);
+
+      const total = count.total ?? 0;
+      const hasNextPage = total > input.cursor * input.limit;
+      const result = {
+        data: colors.data,
+        total,
+        pageCount: Math.ceil(total / input.limit),
+        hasNextPage,
+        nextCursor: hasNextPage ? input.cursor + 1 : undefined,
       };
 
-      let nextCursor: number | undefined = undefined;
-      if (result.hasNext) {
-        nextCursor = cursor + 1;
-      }
-
-      return {
-        data: result.data,
-        hasNextPage: result.hasNext,
-        nextCursor,
-      };
+      return result;
     }),
 });
