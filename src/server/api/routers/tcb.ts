@@ -33,7 +33,7 @@ export const tcbRouter = createTRPCRouter({
       const total = count.total ?? 0;
       const hasNextPage = total > input.cursor * input.limit;
       const result = {
-        data: colors.data,
+        data: colors.data as Color[],
         total,
         pageCount: Math.ceil(total / input.limit),
         hasNextPage,
