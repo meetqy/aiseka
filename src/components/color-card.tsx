@@ -2,6 +2,7 @@
 
 import { Card, CardBody } from "@nextui-org/react";
 import Color from "color";
+import Link from "next/link";
 
 interface Props {
   hex: string;
@@ -12,12 +13,14 @@ export const ColorCard = ({ hex }: Props) => {
 
   return (
     <Card
-      className="aspect-[2/3] cursor-pointer hover:scale-105 transform transition-transform"
+      className="aspect-[2/3] transform cursor-pointer transition-transform hover:scale-105"
       shadow="md"
       style={{ background: hex, color: dark ? "white" : "black" }}
+      as={Link}
+      href={`/color/hex/${hex.replace("#", "").toLowerCase()}`}
     >
       <CardBody className="p-6">
-        <h3 className="uppercase text-2xl font-mono font-medium">{hex}</h3>
+        <h3 className="font-mono text-2xl font-medium uppercase">{hex}</h3>
       </CardBody>
     </Card>
   );
