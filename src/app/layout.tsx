@@ -1,6 +1,5 @@
 import "~/styles/globals.css";
 
-import { GeistSans } from "geist/font/sans";
 import { type Metadata } from "next";
 
 import { TRPCReactProvider } from "~/trpc/react";
@@ -19,13 +18,11 @@ export default function RootLayout({
   children,
 }: Readonly<{ children: React.ReactNode }>) {
   return (
-    <html lang="en" className={`${GeistSans.variable}`}>
-      <body
-        className={clsx("min-h-screen bg-background font-sans antialiased")}
-      >
+    <html lang="en">
+      <body className={clsx("min-h-screen bg-content2 font-sans antialiased")}>
         <TRPCReactProvider>
           <Providers>
-            <div className="relative flex flex-col bg-content2">
+            <div className="relative flex flex-col">
               <Navbar />
               <main className="container py-8">{children}</main>
               <footer className="flex w-full items-center justify-center py-3">

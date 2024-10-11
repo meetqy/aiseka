@@ -18,6 +18,8 @@ export const TYPE = [
 ] as const;
 export type ColorType = (typeof TYPE)[number];
 
+const db = app.database();
+
 export const tcbRouter = createTRPCRouter({
   getColors: publicProcedure
     .input(
@@ -31,7 +33,6 @@ export const tcbRouter = createTRPCRouter({
     .query(async ({ input }) => {
       const { type } = input;
 
-      const db = app.database();
       let query = db.collection("colors");
 
       if (type === "random") {
@@ -87,5 +88,53 @@ export const tcbRouter = createTRPCRouter({
       };
 
       return result;
+    }),
+
+  getColor: publicProcedure
+    .input(
+      z.object({
+        hex: z.string(),
+      }),
+    )
+    .query(async ({ input }) => {
+      const res = await db
+        .collection("colors")
+        .aggregate()
+        .match({
+          hex: input.hex,
+        })
+        .lookup({
+          from: "colors-introduce",
+          localField: "introduce",
+          foreignField: "_id",
+          as: "introduce",
+        })
+        .end();
+
+      const { data } = res as {
+        data: (Color & { introduce?: ColorIntroduce[] })[];
+      };
+      const color = data[0];
+
+      if (!color) return null;
+
+      const introduce = color.introduce?.[0];
+      if (!introduce) {
+        return {
+          ...color,
+          introduce: undefined,
+        };
+      }
+
+      return {
+        ...color,
+        introduce: {
+          name: introduce.name,
+          name_en: introduce.name_en,
+          description: introduce.description,
+          meaning: introduce.meaning,
+          usage: introduce.usage,
+        },
+      };
     }),
 });
