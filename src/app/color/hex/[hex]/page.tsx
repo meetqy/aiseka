@@ -119,7 +119,7 @@ export default async function Page({ params }: { params: { hex: string } }) {
           })}
         </article>
 
-        <aside className="h-screen w-96 shrink-0 rounded-medium bg-white"></aside>
+        <aside className="h-screen w-80 shrink-0 rounded-medium bg-white"></aside>
       </main>
       <Background color={color.hex} />
     </>
