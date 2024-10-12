@@ -3,7 +3,7 @@ import { ImageResponse } from "next/og";
 
 export const size = {
   width: 1200,
-  height: 600,
+  height: 630,
 };
 
 // Image generation
