@@ -1,12 +1,29 @@
 import { api } from "~/trpc/server";
 import { Background } from "./background";
-import { Button, Card } from "@nextui-org/react";
+import { Button, Card, Image } from "@nextui-org/react";
 import { Icon } from "@iconify/react";
 import Color from "color";
+import { type Metadata } from "next";
+import { notFound } from "next/navigation";
+
+const getColor = (hex: string) => {
+  return api.tcb.getColor({ hex: "#" + hex });
+};
+
+export const generateMetadata = async ({ params }: { params: { hex: string } }): Promise<Metadata> => {
+  const color = await getColor(params.hex);
+  if (!color) notFound();
+  const hex = color.hex.toUpperCase();
+
+  return {
+    title: `${hex} 颜色信息`,
+    description: `${hex} 的 HSL、RGB、CMYK、HSV、XYZ 格式转换结果，以及颜色的互补色、三角色、四角色、相邻色等颜色组合，相关的调色盘/色卡。`,
+  };
+};
 
 export default async function Page({ params }: { params: { hex: string } }) {
-  const color = await api.tcb.getColor({ hex: "#" + params.hex });
-  if (!color) return null;
+  const color = await getColor(params.hex);
+  if (!color) notFound();
 
   const colorObj = Color(color.hex);
   const colorArr = [
@@ -119,7 +136,12 @@ export default async function Page({ params }: { params: { hex: string } }) {
           })}
         </article>
 
-        <aside className="h-screen w-80 shrink-0 rounded-medium bg-white"></aside>
+        <aside className="h-screen w-72 shrink-0 rounded-medium">
+          <section className="rounded-medium bg-background p-4">
+            <p className="mb-4 text-center">微信小程序：颜色搭配色卡</p>
+            <Image src="/qrcode.png" alt="微信小程序：颜色搭配色卡" />
+          </section>
+        </aside>
       </main>
       <Background color={color.hex} />
     </>

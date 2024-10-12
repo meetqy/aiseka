@@ -21,7 +21,7 @@ export const metadata: Metadata = {
 export default function RootLayout({ children }: Readonly<{ children: React.ReactNode }>) {
   return (
     <html lang="en">
-      <body className={clsx("min-h-screen bg-content2 font-sans antialiased")}>
+      <body className={clsx("min-h-screen bg-content2 font-sans antialiased light")}>
         <TRPCReactProvider>
           <Providers>
             <div className="relative flex flex-col">
