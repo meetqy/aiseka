@@ -8,6 +8,7 @@ import clsx from "clsx";
 import { Navbar } from "~/components/navbar";
 import { siteConfig } from "~/config/site";
 import { Footer } from "~/components/footer";
+import NextTopLoader from "nextjs-toploader";
 
 export const metadata: Metadata = {
   title: {
@@ -22,6 +23,7 @@ export default function RootLayout({ children }: Readonly<{ children: React.Reac
   return (
     <html lang="en">
       <body className={clsx("min-h-screen bg-content2 font-sans antialiased light")}>
+        <NextTopLoader color="#115ae5" />
         <TRPCReactProvider>
           <Providers>
             <div className="relative flex flex-col">
