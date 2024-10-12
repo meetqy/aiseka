@@ -8,7 +8,7 @@ import clsx from "clsx";
 
 // import { ThemeSwitch } from "~/components/theme-switch";
 import { siteConfig } from "~/config/site";
-import { TwitterIcon, GithubIcon, DiscordIcon, SearchIcon, Logo } from "~/components/icons";
+import { GithubIcon, SearchIcon, Logo } from "~/components/icons";
 
 export const Navbar = () => {
   const searchInput = (

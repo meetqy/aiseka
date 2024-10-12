@@ -5,7 +5,6 @@ import { type Metadata } from "next";
 import { TRPCReactProvider } from "~/trpc/react";
 import { Providers } from "~/components/providers";
 import clsx from "clsx";
-import { Link } from "@nextui-org/react";
 import { Navbar } from "~/components/navbar";
 import { siteConfig } from "~/config/site";
 import { Footer } from "~/components/footer";
@@ -27,7 +26,7 @@ export default function RootLayout({ children }: Readonly<{ children: React.Reac
           <Providers>
             <div className="relative flex flex-col">
               <Navbar />
-              <main className="container lg:py-8">{children}</main>
+              <main className="lg:container lg:py-8">{children}</main>
               <Footer />
             </div>
           </Providers>
