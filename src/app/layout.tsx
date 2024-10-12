@@ -8,6 +8,7 @@ import clsx from "clsx";
 import { Link } from "@nextui-org/react";
 import { Navbar } from "~/components/navbar";
 import { siteConfig } from "~/config/site";
+import { Footer } from "~/components/footer";
 
 export const metadata: Metadata = {
   title: {
@@ -26,13 +27,8 @@ export default function RootLayout({ children }: Readonly<{ children: React.Reac
           <Providers>
             <div className="relative flex flex-col">
               <Navbar />
-              <main className="container py-8">{children}</main>
-              <footer className="flex w-full items-center justify-center py-3">
-                <Link isExternal className="flex items-center gap-1 text-current" href="https://nextui-docs-v2.vercel.app?utm_source=next-app-template" title="nextui.org homepage">
-                  <span className="text-default-600">Powered by</span>
-                  <p className="text-primary">NextUI</p>
-                </Link>
-              </footer>
+              <main className="container lg:py-8">{children}</main>
+              <Footer />
             </div>
           </Providers>
         </TRPCReactProvider>

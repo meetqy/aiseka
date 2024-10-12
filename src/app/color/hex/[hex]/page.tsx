@@ -69,22 +69,21 @@ export default async function Page({ params }: { params: { hex: string } }) {
 
   return (
     <>
-      <main className="flex w-full gap-8">
-        <article className="prose max-w-screen-xl flex-1 rounded-medium bg-white p-8">
+      <main className="flex w-full p-4 lg:gap-8 lg:p-0">
+        <article className="prose max-w-screen-xl flex-1 rounded-medium bg-white p-4 lg:p-8">
           <h1 className="uppercase">
             <span className="font-mono">{color.hex}</span> - 颜色信息
           </h1>
 
-          <div className="relative flex h-80 w-full items-center justify-center rounded-medium" style={{ backgroundColor: color.hex }}>
-            <div className="flex h-14 w-full max-w-72 items-center justify-between rounded-medium bg-white px-4 font-mono text-xl font-medium uppercase shadow-md">
+          <div className="relative flex aspect-[4/2] w-full items-center justify-center rounded-medium lg:aspect-[12/3]" style={{ backgroundColor: color.hex }}>
+            <div className="flex w-3/5 items-center justify-between rounded-medium bg-white px-4 py-2 font-mono text-xl font-medium uppercase shadow-md lg:w-1/4">
               <span>{color.hex}</span>
               <Button radius="full" isIconOnly style={{ backgroundColor: color.hex }} />
             </div>
             <Button
               radius="full"
               isIconOnly
-              size="lg"
-              className="absolute bottom-8 right-8"
+              className="absolute bottom-2 right-2 lg:bottom-8 lg:right-8"
               style={{
                 backgroundColor: isDark ? "white" : "black",
                 color: color.hex,
@@ -95,7 +94,7 @@ export default async function Page({ params }: { params: { hex: string } }) {
             </Button>
           </div>
 
-          <div className="mt-4 grid grid-cols-4 gap-4">
+          <div className="mt-4 grid grid-cols-2 gap-2 lg:grid-cols-4 lg:gap-4">
             {colorArr.map((item) => (
               <div key={item.name} className="flex flex-col">
                 <span className="text-sm font-medium text-foreground-400">{item.name}</span>
@@ -117,10 +116,10 @@ export default async function Page({ params }: { params: { hex: string } }) {
                   <span className="font-normal text-foreground-500">{item.desc}</span>
                 </h3>
                 <p></p>
-                <div className="grid grid-cols-4 gap-8">
+                <div className="grid grid-cols-2 gap-4 lg:grid-cols-4 lg:gap-8">
                   {item.colors.map((color) => (
                     <Card
-                      className="flex aspect-[5/2] items-center justify-center font-mono text-xl uppercase"
+                      className="flex aspect-[2/1] items-center justify-center font-mono text-xl uppercase lg:aspect-[5/2]"
                       key={color.hex}
                       style={{
                         backgroundColor: color.hex,
@@ -136,9 +135,9 @@ export default async function Page({ params }: { params: { hex: string } }) {
           })}
         </article>
 
-        <aside className="h-screen w-72 shrink-0 rounded-medium">
+        <aside className="hidden h-screen w-72 shrink-0 rounded-medium xl:block">
           <section className="rounded-medium bg-background p-4">
-            <p className="mb-4 text-center">微信小程序：颜色搭配色卡</p>
+            <p className="mb-4 text-center font-medium text-foreground-500">微信小程序：颜色搭配色卡</p>
             <Image src="/qrcode.png" alt="微信小程序：颜色搭配色卡" />
           </section>
         </aside>
