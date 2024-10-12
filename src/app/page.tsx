@@ -5,11 +5,7 @@ import { ColorTab } from "~/components/color-tab";
 import { type ColorType } from "~/server/api/routers/tcb";
 import { api, HydrateClient } from "~/trpc/server";
 
-export default async function ColorsPage({
-  params,
-}: {
-  params: { name: ColorType };
-}) {
+export default async function ColorsPage({ params }: { params: { name: ColorType } }) {
   const name = params.name || "new";
   const limit = 30;
   const res = await api.tcb.getColors({
@@ -27,15 +23,13 @@ export default async function ColorsPage({
               <span className="relative">
                 颜色精选
                 <sup className="absolute -top-4">
-                  <Button color="warning" variant="flat" className="uppercase">
+                  <Button color="warning" className="uppercase shadow-medium">
                     {name}
                   </Button>
                 </sup>
               </span>
             </h2>
-            <p className="mt-6 text-lg leading-8 text-content3-foreground">
-              RGB、HEX、CMYK、HSL代码，组合和颜色渐变，点击颜色可以查看更多详细信息。
-            </p>
+            <p className="mt-6 text-lg leading-8 text-content3-foreground">RGB、HEX、CMYK、HSL代码，组合和颜色渐变，点击颜色可以查看更多详细信息。</p>
           </div>
         </header>
 

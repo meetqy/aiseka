@@ -5,6 +5,7 @@ import { Icon } from "@iconify/react";
 import Color from "color";
 import { type Metadata } from "next";
 import { notFound } from "next/navigation";
+import Link from "next/link";
 
 const getColor = (hex: string) => {
   return api.tcb.getColor({ hex: "#" + hex });
@@ -76,19 +77,27 @@ export default async function Page({ params }: { params: { hex: string } }) {
           </h1>
 
           <div className="relative flex aspect-[4/2] w-full items-center justify-center rounded-medium lg:aspect-[12/3]" style={{ backgroundColor: color.hex }}>
-            <div className="flex w-3/5 items-center justify-between rounded-medium bg-white px-4 py-2 font-mono text-xl font-medium uppercase shadow-md lg:w-1/4">
+            <div
+              className="flex w-3/5 items-center justify-between rounded-medium px-4 py-2 font-mono text-xl font-medium uppercase shadow-md lg:w-1/4"
+              style={{
+                backgroundColor: isDark ? "white" : "black",
+                color: color.hex,
+              }}
+            >
               <span>{color.hex}</span>
               <Button radius="full" isIconOnly style={{ backgroundColor: color.hex }} />
             </div>
             <Button
               radius="full"
               isIconOnly
+              as={Link}
+              href={`/color/hex/${color.random.replace("#", "")}`}
               className="absolute bottom-2 right-2 lg:bottom-8 lg:right-8"
               style={{
                 backgroundColor: isDark ? "white" : "black",
                 color: color.hex,
               }}
-              variant="flat"
+              aria-label="Random Color"
             >
               <Icon icon={"lets-icons:sort-random"} className="h-6 w-6" />
             </Button>

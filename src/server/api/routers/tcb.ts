@@ -8,14 +8,7 @@ const app = tcb.init({
   env: process.env.TCB_ENV_ID,
 });
 
-export const TYPE = [
-  "new",
-  "random",
-  "popular",
-  "red",
-  "green",
-  "blue",
-] as const;
+export const TYPE = ["new", "random", "popular", "red", "green", "blue"] as const;
 export type ColorType = (typeof TYPE)[number];
 
 const db = app.database();
@@ -97,19 +90,22 @@ export const tcbRouter = createTRPCRouter({
       }),
     )
     .query(async ({ input }) => {
-      const res = await db
-        .collection("colors")
-        .aggregate()
-        .match({
-          hex: input.hex,
-        })
-        .lookup({
-          from: "colors-introduce",
-          localField: "introduce",
-          foreignField: "_id",
-          as: "introduce",
-        })
-        .end();
+      const [res, randomRes] = await Promise.all([
+        db
+          .collection("colors")
+          .aggregate()
+          .match({
+            hex: input.hex,
+          })
+          .lookup({
+            from: "colors-introduce",
+            localField: "introduce",
+            foreignField: "_id",
+            as: "introduce",
+          })
+          .end(),
+        db.collection("colors").aggregate().sample({ size: 1 }).end(),
+      ]);
 
       const { data } = res as {
         data: (Color & { introduce?: ColorIntroduce[] })[];
@@ -117,17 +113,20 @@ export const tcbRouter = createTRPCRouter({
       const color = data[0];
 
       if (!color) return null;
+      const { data: random } = randomRes as { data: Color[] };
 
       const introduce = color.introduce?.[0];
       if (!introduce) {
         return {
           ...color,
           introduce: undefined,
+          random: random[0]!.hex,
         };
       }
 
       return {
         ...color,
+        random: random[0]!.hex,
         introduce: {
           name: introduce.name,
           name_en: introduce.name_en,
