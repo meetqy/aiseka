@@ -7,8 +7,7 @@
     "build": "next build",
     "dev": "next dev",
     "lint": "next lint",
-    "start": "next start",
-    "deploy": "next build && next start"
+    "start": "next start"
   },
   "dependencies": {
     "@cloudbase/node-sdk": "^2.11.0",

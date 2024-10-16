@@ -17,6 +17,9 @@ export const metadata: Metadata = {
   },
   description: siteConfig.description,
   icons: [{ rel: "icon", url: "/favicon.ico" }],
+  other: {
+    "baidu-site-verification": "codeva-vxl4AxwC7L",
+  },
 };
 
 export default function RootLayout({ children }: Readonly<{ children: React.ReactNode }>) {
