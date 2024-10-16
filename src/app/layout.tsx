@@ -21,7 +21,7 @@ export const metadata: Metadata = {
 
 export default function RootLayout({ children }: Readonly<{ children: React.ReactNode }>) {
   return (
-    <html lang="en">
+    <html lang="zh-CN">
       <body className={clsx("min-h-screen bg-content2 font-sans antialiased light")}>
         <NextTopLoader color="#115ae5" />
         <TRPCReactProvider>
