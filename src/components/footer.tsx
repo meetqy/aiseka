@@ -12,7 +12,12 @@ export function Footer() {
           </Link>
         </div>
         <div className="mt-8 md:order-1 md:mt-0">
-          <p className="text-center text-xs leading-5 text-foreground-500">&copy; 2024{new Date().getFullYear() != 2024 && `-${new Date().getFullYear()}`} AISEKA, Inc. All rights reserved.</p>
+          <p className="text-center md:text-left">
+            <Link href="https://beian.miit.gov.cn/" target="_blank">
+              蜀ICP备2023009496号
+            </Link>
+          </p>
+          <p className="text-center text-sm leading-5 text-foreground-500">&copy; 2024{new Date().getFullYear() != 2024 && `-${new Date().getFullYear()}`} AISEKA, Inc. All rights reserved.</p>
         </div>
       </div>
     </footer>
