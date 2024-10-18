@@ -18,8 +18,16 @@ export const generateMetadata = async ({ params }: { params: { hex: string } }):
   const hex = color.hex.toUpperCase();
 
   return {
-    title: `${hex} 颜色信息`,
+    title: `${hex} ${color.introduce?.name} ${color.introduce?.name_en} 颜色信息`,
     description: `${hex} 的 HSL、RGB、CMYK、HSV、XYZ 格式转换结果，以及颜色的互补色、三角色、四角色、相邻色等颜色组合，相关的调色盘/色卡。`,
+    twitter: {
+      card: "summary_large_image",
+      site: "@aiseka",
+    },
+    openGraph: {
+      type: "article",
+      url: `https://color.aiseka.cn/color/hex/${hex.replace("#", "")}`,
+    },
   };
 };
 
