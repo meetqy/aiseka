@@ -1,11 +1,13 @@
 import { api } from "~/trpc/server";
 import { Background } from "./background";
-import { Button, Card, Image } from "@nextui-org/react";
+import { Button, Card, Chip, Image } from "@nextui-org/react";
 import { Icon } from "@iconify/react";
 import Color from "color";
 import { type Metadata } from "next";
 import { notFound } from "next/navigation";
 import Link from "next/link";
+import slugify from "slugify";
+import * as ComPlementaryIcons from "./icons";
 
 const getColor = async (hex: string) => {
   hex = "#" + hex;
@@ -125,15 +127,39 @@ export default async function Page({ params }: { params: { hex: string } }) {
             </div>
           </div>
 
+          <div>
+            <h2>
+              <span className="uppercase">{color.hex}</span> {color.introduce?.name_en} {color.introduce?.name}
+            </h2>
+            <p>{color.introduce?.description}</p>
+            <div className="flex flex-wrap gap-2">
+              {color.introduce?.meaning?.map((item) => (
+                <Chip color="primary" key={item} style={{ backgroundColor: color.hex, color: isDark ? "white" : "black" }}>
+                  {item}
+                </Chip>
+              ))}
+              {color.introduce?.usage?.map((item) => (
+                <Chip color="primary" key={item} style={{ backgroundColor: color.hex, color: isDark ? "white" : "black" }}>
+                  {item}
+                </Chip>
+              ))}
+            </div>
+          </div>
+
           <h2>颜色组合</h2>
           {colors.map((item) => {
             return (
               <section key={item.title}>
-                <h3 className="flex flex-col">
-                  <span>{item.title}</span>
-                  <span className="font-normal text-foreground-500">{item.desc}</span>
+                <h3 className="relative flex items-center">
+                  {ComPlementaryIcons[item.title.replace(" ", "")]({
+                    className: "w-10 h-10",
+                    color: color.hex,
+                  })}
+                  <span className="ml-4 flex flex-col">
+                    <span>{item.title}</span>
+                    <span className="font-normal text-foreground-500">{item.desc}</span>
+                  </span>
                 </h3>
-                <p></p>
                 <div className="grid grid-cols-2 gap-4 lg:grid-cols-4 lg:gap-8">
                   {item.colors.map((color) => (
                     <Card
