@@ -6,8 +6,7 @@ import Color from "color";
 import { type Metadata } from "next";
 import { notFound } from "next/navigation";
 import Link from "next/link";
-import slugify from "slugify";
-import * as ComPlementaryIcons from "./icons";
+import ComPlementaryIcons from "./icons";
 
 const getColor = async (hex: string) => {
   hex = "#" + hex;
@@ -151,7 +150,7 @@ export default async function Page({ params }: { params: { hex: string } }) {
             return (
               <section key={item.title}>
                 <h3 className="relative flex items-center">
-                  {ComPlementaryIcons[item.title.replace(" ", "")]({
+                  {ComPlementaryIcons[item.title.replace(" ", "") as keyof typeof ComPlementaryIcons]({
                     className: "w-10 h-10",
                     color: color.hex,
                   })}

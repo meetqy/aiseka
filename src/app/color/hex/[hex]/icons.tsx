@@ -97,3 +97,14 @@ export const Triadic: React.FC<IconSvgProps> = ({ size = 24, width, color, heigh
     </svg>
   );
 };
+
+const all = {
+  Triadic,
+  Tetradic,
+  SplitComplementary,
+  Complementary,
+  Analogus,
+  AnalogusComplementary,
+};
+
+export default all;
