@@ -7,12 +7,13 @@ import { type Metadata } from "next";
 import { notFound } from "next/navigation";
 import Link from "next/link";
 
-const getColor = (hex: string) => {
-  return api.tcb.getColor({ hex: "#" + hex });
+const getColor = async (hex: string) => {
+  hex = "#" + hex;
+  return await Promise.all([api.tcb.getColor({ hex }), api.tcb.getPaletteByColor({ hex })]);
 };
 
 export const generateMetadata = async ({ params }: { params: { hex: string } }): Promise<Metadata> => {
-  const color = await getColor(params.hex);
+  const [color] = await getColor(params.hex);
   if (!color) notFound();
   const hex = color.hex.toUpperCase();
 
@@ -23,7 +24,7 @@ export const generateMetadata = async ({ params }: { params: { hex: string } }):
 };
 
 export default async function Page({ params }: { params: { hex: string } }) {
-  const color = await getColor(params.hex);
+  const [color, palettes] = await getColor(params.hex);
   if (!color) notFound();
 
   const colorObj = Color(color.hex);
@@ -142,6 +143,24 @@ export default async function Page({ params }: { params: { hex: string } }) {
               </section>
             );
           })}
+
+          <h2>调色盘推荐</h2>
+          <div className="grid gap-4 lg:gap-8">
+            {palettes.map((item) => (
+              <div key={item.hex} className="flex overflow-hidden rounded-medium shadow-medium">
+                {item.palette.map((color) => (
+                  <div className="relative flex aspect-square flex-1 flex-col items-center justify-center md:aspect-[16/10] lg:aspect-video" key={color}>
+                    <div style={{ backgroundColor: color, color: isDark ? "white" : "black" }} className="flex h-full w-full items-center justify-center text-2xl">
+                      {color === item.hex ? "✓" : ""}
+                    </div>
+                    <p style={{ color: Color(color).isDark() ? "white" : "black" }} className="xs:tex-base absolute bottom-1 z-10 m-0 py-1 text-center font-mono text-sm lg:text-lg">
+                      {color}
+                    </p>
+                  </div>
+                ))}
+              </div>
+            ))}
+          </div>
         </article>
 
         <aside className="hidden h-screen w-72 shrink-0 rounded-medium xl:block">

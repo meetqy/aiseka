@@ -1,6 +1,7 @@
 import { createTRPCRouter, publicProcedure } from "~/server/api/trpc";
 import tcb from "@cloudbase/node-sdk";
 import { z } from "zod";
+import ColorFn from "color";
 
 const app = tcb.init({
   secretId: process.env.TCB_SECRET_ID,
@@ -12,6 +13,7 @@ export const TYPE = ["new", "random", "popular", "red", "green", "blue"] as cons
 export type ColorType = (typeof TYPE)[number];
 
 const db = app.database();
+const _ = db.command;
 
 export const tcbRouter = createTRPCRouter({
   getColors: publicProcedure
@@ -136,4 +138,60 @@ export const tcbRouter = createTRPCRouter({
         },
       };
     }),
+
+  getPaletteByColor: publicProcedure
+    .input(
+      z.object({
+        hex: z.string(),
+        limit: z.number().default(5),
+      }),
+    )
+    .query(async ({ input }) => {
+      const { hex, limit } = input;
+
+      const hsv = ColorFn(hex).hsv().array();
+      const res = await db
+        .collection("colors")
+        .aggregate()
+        .match({
+          "hsv.0": calcCmd(hsv[0]!, 10),
+          "hsv.1": calcCmd(hsv[1]!, 10),
+          "hsv.2": calcCmd(hsv[2]!, 10),
+        })
+        .limit(limit)
+        .end();
+
+      const { data } = res as { data: { hex: string; palettes: string[] }[] };
+
+      const result: { hex: string; palette: string }[] = [];
+
+      data.map((item) =>
+        item.palettes.map((palette) => {
+          if (!result.some((r) => r.palette === palette)) {
+            result.push({
+              hex: item.hex.toUpperCase(),
+              palette,
+            });
+          }
+        }),
+      );
+
+      return result.slice(0, limit).map((item) => {
+        return {
+          hex: item.hex,
+          palette: item.palette.split("-").map((hex) => "#" + hex.toUpperCase()),
+        };
+      });
+    }),
 });
+
+function calcCmd(value: number, range: number) {
+  const a = value - range;
+  const b = value + range;
+
+  if (a === b) {
+    return a > value ? _.gte(value).and(_.lte(a)) : _.gte(value).and(_.lte(a));
+  }
+
+  return _.gte(a).and(_.lte(b));
+}
